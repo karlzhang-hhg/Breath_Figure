@@ -9,40 +9,55 @@ source("Min_dist.R")
 #interval, since the last calculated time t.
 #First grow; then check coalescence; then check departure. 
 #Update the bfobj (growth & coalescence).
-Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr)
+Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr,search.pool.min)
 {
   ncoal.old=ncoal
+  depart.list=NULL #if, after coalesecence, radius is larger than rcr, the droplet departs from the substrate
   ######################################################################
   #for potential coalescence happening in time interval [t,t+dt]
+  print(c("min_dist:",min_dist,is.matrix(min_dist)))
   if (min_dist[1,5]>2*alpha*dt) #there is no coalescence in time interval [t,t+dt]
   {
     for (i in 1:length(bfobj))
     {
       #Note that condensation couldn't result in departure
       bfobj[[i]]$r<<-bfobj[[i]]$r+alpha*dt
-      bfobj[[i]]$log.rt<<-rbind(bfobj[[i]]$log.rt,c(t+dt,bfobj[[i]]$r))
+      #print(c(bfobj[[i]]$ind,bfobj[[i]]$r))
+      bfobj[[i]]$log.tr<<-rbind(bfobj[[i]]$log.tr,c(t+dt,bfobj[[i]]$posi,bfobj[[i]]$r))
     }
     for (i in 1:nrow(min_dist))
     {
       min_dist[i,5]=min_dist[i,5]-2*alpha*dt
     }
     search.pool=as.vector(min_dist[,1:2])
-    return(list(num_coal=ncoal-ncoal.old,dt,min_dist,search.pool))
+    return(list(num_coal=ncoal-ncoal.old,dt,min_dist,depart.list,search.pool))
   }
   else #there is some coalescence in time interval [t,t+dt]; update dt to dtp; update droplet radius to time t+dtp
   {
+    #First add the radius
+    dtp=min_dist[1,5]/2/alpha
+    #print(c("dtp:",dtp))
+    for (i in 1:length(bfobj))
+    {
+      #Note that condensation couldn't result in departure
+      bfobj[[i]]$r<<-bfobj[[i]]$r+alpha*dtp
+      #print(c(bfobj[[i]]$ind,bfobj[[i]]$r))
+      bfobj[[i]]$log.tr<<-rbind(bfobj[[i]]$log.tr,c(t+dtp,bfobj[[i]]$posi,bfobj[[i]]$r))
+    }
+    for (i in 1:nrow(min_dist))
+    {
+      min_dist[i,5]=min_dist[i,5]-2*alpha*dtp
+    }
+    #Then, deal with coalescence
     search.pool.new=NULL #only droplets coalesced need to be checked (put into search.pool.new)
     delete.list=NULL #those absorbed droplets need to be deleted from bfobj
-    depart.list=NULL #if, after coalesecence, radius is larger than rcr, the droplet departs from the substrate
+    
     #Because every droplet can only appear once in min_dist, so that I don't need worry about
     #whether previous coalescence would result in the case of unphysical later coalescence
     #where droplet-pair distance is larger than zero
     for (i in 1:nrow(min_dist))
     {      
       ncoal=ncoal+1L
-      dtp=min_dist[1,5]/2/alpha
-      bfobj[[as.character(min_dist[i,1])]]$r<<-bfobj[[as.character(min_dist[i,1])]]$r+alpha*dtp
-      bfobj[[as.character(min_dist[i,2])]]$r<<-bfobj[[as.character(min_dist[i,2])]]$r+alpha*dtp
       #The larger drop before coalescence stay. The smaller one is regarded as absorbed
       if (bfobj[[as.character(min_dist[i,1])]]$r<bfobj[[as.character(min_dist[i,2])]]$r)
       {
@@ -77,20 +92,36 @@ Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr)
     ######################################################################
     #Check if there is still some coalescence because of previous drop-pair coalescence
     #need to happen using Neg_dist
-    search.pool=search.pool.new
+    search.pool=c(search.pool.new,search.pool.min)
     Neg_dist_info=Neg_dist(t+dtp,ncoal,h,w,depart.list,search.pool)
-    ncoal=ncoal+Neg_dist_info[1]
-    depart.list=Neg_dist_info[2]
+    ncoal=ncoal+Neg_dist_info[[1]]
+    depart.list=Neg_dist_info[[2]]
     ######################################################################
     #Find min_dist after coalescence (a new breath figure)
     #Once coalescence happen, min_dist should be calculated over all existing droplets
     min_dist0=matrix(c(-1,-1,0,0,max(h,w)),nrow=1)
     min_dist=min_dist0
-    Min_dist_info<-Min_dist(t,min_dist,as.integer(names(bfobj)))
-    min_dist=Min_dist_info[1]
+    Min_dist_info<-Min_dist(t+dtp,min_dist,as.integer(names(bfobj)))
+    min_dist=Min_dist_info[[1]]
     #search.pool.min is a search pool for finding minimum gap in droplet pattern
-    search.pool.min=Min_dist_info[2]
-    ######################################################################
-    return(list(num_coal=ncoal-ncoal.old,dtp,min_dist,depart.list,search.pool.min))
+    search.pool.min=Min_dist_info[[2]]
+#     ######################################################################
+#     Neg_dist_info=Neg_dist(t+dtp,ncoal,h,w,depart.list,search.pool.min)
+#     ncoal=ncoal+Neg_dist_info[[1]]
+#     depart.list=Neg_dist_info[[2]]
+#     
+#     ######################################################################
+#     #Find min_dist after coalescence (a new breath figure)
+#     #Once coalescence happen, min_dist should be calculated over all existing droplets
+#     min_dist0=matrix(c(-1,-1,0,0,max(h,w)),nrow=1)
+#     min_dist=min_dist0
+#     Min_dist_info<-Min_dist(t+dtp,min_dist,as.integer(names(bfobj)))
+#     min_dist=Min_dist_info[[1]]
+#     #search.pool.min is a search pool for finding minimum gap in droplet pattern
+#     search.pool.min=Min_dist_info[[2]]
+    
+    print(c("search.pool.min:",search.pool.min))
+    num_coal=ncoal-ncoal.old
+    return(list(num_coal,dtp,min_dist,depart.list,search.pool.min))
   }
 }

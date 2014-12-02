@@ -9,14 +9,11 @@ Crea_drop<-function(ind,t,x,y,inir)
              jump.t=-1,#jump time
              r=inir,#current radius
              posi=c(x,y),#center position
-             log.tr=as.data.frame("t"=t,"x"=x,"y"=y,"inir"=inir),#log of time, position, and radius
+             log.tr=matrix(c(t,x,y,inir),nrow=1),#log of time, position, and radius
              abso.drop=as.vector(as.integer()),#indices of droplets absorbed to generate this droplet
-             coal=list(coal1=list(ind=as.integer(),#index of coalescence
-                                  coal.t=as.double(),#time of coalescence
-                                  delt.s=as.double(),#drifting distance of coalescence
-                                  invo.drop=as.vector(as.double())#indices of droplets involved in this coalescence
-             ))
+             coal=list()
   )
   #print(node)
+  colnames(node$log.tr)<-c('t','x','y','radius')
   return(node)           
 }

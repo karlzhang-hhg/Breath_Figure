@@ -2,7 +2,7 @@ library(plotrix)
 
 ######################################################################
 #Plot the frame of current time t
-Plot_bf<-function(j,t,h,w,dt)
+Plot_bf_online<-function(j,t,h,w,dt)
 {
   drop.info=NULL
   for (i in 1:length(bfobj))
@@ -37,18 +37,22 @@ Plot_bf<-function(j,t,h,w,dt)
     drop.info=rbind(drop.info,drop.info.i)
   }
   #print(c("plotdrops",nrow(drop.info)))
-  old.wd<-getwd()
-  setwd(paste0(getwd(),"/images"))
+#   old.wd<-getwd()
+#   setwd(paste0(getwd(),"/images"))
   pdf(paste0(j,".pdf"))
   #pdf(paste0(j,"-",(t-((t/dt*1000)%%1L)*dt/1000),".pdf"))
   plot.new()
-  plot.window(xlim=c(0,w),ylim=c(0,h),xaxs="i",yaxs="i")
-  box()
-  title(paste0(j,"-",(t-((t/dt*1000)%%1L)*dt/1000)))
+  par(mar=c(0,0,0,0))
+  print(par("plt"))
+  plot.window(xlim=c(0,w),ylim=c(0,h),xaxs="i",yaxs="i",asp=1)
+  #rect(0,0,w,h)
+  #box()
+  #title(paste0(j,"-",(t-((t/dt*1000)%%1L)*dt/1000)))
   draw.circle(drop.info[,2],drop.info[,3],drop.info[,4],
               border = "blue",
               col = color.scale(drop.info[,4],c(1,0),0,c(0,1),alpha = 0.5),
               lty="blank")
+  
   dev.off()
-  setwd(old.wd)
+#   setwd(old.wd)
 }

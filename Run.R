@@ -1,27 +1,27 @@
-setwd("C:/My Life Style/Courses of Statistics/STA 561 Probability Machine Learning/Project/R-code")
-
 source("Evol.R")
 
+#setwd("/home/vis/kz29/ZKG folder/STA561/Breath_Figure")
 
-h=5
-w=5
-nstep=1
-lambda=100
-alpha=0.1
-rcr=0.5
-dr=0.01
-dt=0.1
+h=1
+w=1
+nstep=200L
+lambda=20
+alpha=0.08
+rcr=0.03
+dr=1.05
+dt=0.01
 nuclr=0.0001
 
 
 t=0
 tseq=t
-coalseq=0
-ncoal=0
+coalseq=NULL
+ncoal=0L
 coalall=NULL
 depart.list=list()
 bfobj=NULL
 bfallobj=NULL
 coalall=NULL
+nucl.num=0
 
 Evol(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr)
