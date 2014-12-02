@@ -36,18 +36,23 @@ Plot_bf<-function(j,t,h,w,dt)
     
     drop.info=rbind(drop.info,drop.info.i)
   }
-  #print(c("plotdrops",nrow(drop.info)))
+  print(c("plotdrops",nrow(drop.info)))
   old.wd<-getwd()
-  setwd(paste0(getwd(),"/images"))
+  setwd(paste0(old.wd,"/Dat/Run1/images"))
   pdf(paste0(j,".pdf"))
   #pdf(paste0(j,"-",(t-((t/dt*1000)%%1L)*dt/1000),".pdf"))
   plot.new()
-  plot.window(xlim=c(0,w),ylim=c(0,h),xaxs="i",yaxs="i")
-  box()
-  title(paste0(j,"-",(t-((t/dt*1000)%%1L)*dt/1000)))
+  par(mar=c(0,0,0,0))
+  #print(par("plt"))
+  #asp control the aspect ratio of unit length in x and y direction
+  #set it as 1 so that the position in figure is precisely presented
+  plot.window(xlim=c(0,w),ylim=c(0,h),xaxs="i",yaxs="i",asp=1)
+  #rect(0,0,w,h)
+  #box()
+  #title(paste0(j,"-",(t-((t/dt*1000)%%1L)*dt/1000)))
   draw.circle(drop.info[,2],drop.info[,3],drop.info[,4],
               border = "blue",
-              col = color.scale(drop.info[,4],c(1,0),0,c(0,1),alpha = 0.5),
+              col = color.scale(drop.info[,4],c(1,0),0,c(0,1),alpha = 0.7),
               lty="blank")
   dev.off()
   setwd(old.wd)
