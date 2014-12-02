@@ -87,6 +87,7 @@ Neg_dist<-function(t,ncoal,h,w,depart.list,search.pool)
         #Otherwise, it stays
         if (bfobj[[as.character(big)]]$r>rcr)
         {
+          bfobj[[as.character(big)]]&jump.t<<-t
           #Only include the droplet jump at the last time
           if (!((small %in% depart.list)|(big %in% depart.list)))
           {
