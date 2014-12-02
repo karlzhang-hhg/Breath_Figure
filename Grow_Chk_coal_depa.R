@@ -18,6 +18,7 @@ Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr,search.pool.min)
   print(c("min_dist:",min_dist,is.matrix(min_dist)))
   if (min_dist[1,5]>2*alpha*dt) #there is no coalescence in time interval [t,t+dt]
   {
+    print("large separation")
     for (i in 1:length(bfobj))
     {
       #Note that condensation couldn't result in departure
@@ -77,6 +78,7 @@ Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr,search.pool.min)
       if (bfobj[[as.character(big)]]$r>rcr)
       {
         depart.list=c(depart.list,big) #included those departed
+        bfobj[[as.character(big)]]&jump.t<<-t+dtp
         search.pool.new=c(search.pool.new,big)
         delete.list=c(delete.list,small) #included those absorbed
       }
