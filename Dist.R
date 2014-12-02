@@ -13,6 +13,13 @@ Dist<-function(p1,p2,h,w)
   if (dist0<distw & dist0<disth) return(c(0,0,dist0))
   else
   {
-    ifelse(distw<disth,return(c(1,0,distw)),return(c(0,1,disth)))
+    if(distw<disth)
+    {
+      return(c(1,0,distw))
+    }
+    else
+    {
+      return(c(0,1,disth))
+    }
   }
 }
