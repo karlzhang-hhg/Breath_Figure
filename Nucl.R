@@ -2,6 +2,8 @@ library(spatstat)
 source("Crea_drop.R")
 source("Dist.R")
 
+#The ratio of radius of effective area for a droplet
+rratio=1.05
 
 ######################################################################
 #Nucleation function: Generate nucleation and 
@@ -20,6 +22,7 @@ Nucl<-function(t,lambda, h, w, dr, nuclr,search.pool.min)
   nucl<-rMaternII(lambda,dr,win=owin(c(0,w),c(0,h)),stationary = T)
   #plot(nucl)
   print(c("nuclnum",nucl$n))
+  stopifnot(nucl$n!=0)
   if (length(bfobj)==0)
   {
     ndrop=ndrop+1L
@@ -35,7 +38,7 @@ Nucl<-function(t,lambda, h, w, dr, nuclr,search.pool.min)
     flag.thin=0 #thin or not
     for (j in 1:ndrop)
     {
-      if (Dist(c(nucl$x[i],nucl$y[i]),bfobj[[j]]$posi,h,w)[3]<=nuclr+dr*bfobj[[j]]$r)
+      if (Dist(c(nucl$x[i],nucl$y[i]),bfobj[[j]]$posi,h,w)[3]<=nuclr+rratio*bfobj[[j]]$r)
       {
         flag.thin=1
         break
