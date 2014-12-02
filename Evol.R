@@ -36,6 +36,7 @@ Evol<-function(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr)
     dtp=coalinfo[[2]]
     min_dist=coalinfo[[3]]
     depart.list<<-c(depart.list,coalinfo[[4]])
+    print(c("jump:",coalinfo[[4]]))
     search.pool.min=coalinfo[[5]]
     ######################################################################
     #Nucleation (routine)
@@ -62,11 +63,4 @@ Evol<-function(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr)
     Plot_bf(i,t,h,w,dt)
     print(c("i&nucl.num&t:",i,nucl.num,t))
   }
-  save(bfallobj,"bfallobj")
-  save(bfobj,"bfobj")
-  save(tseq,"tseq")
-  save(depart.list,"depart.list")
-  save(coalall,"coalall")
-  save(coalseq,"coalseq")
-  save(nucl.num,"nucl.num")
 }
