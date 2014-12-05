@@ -38,7 +38,7 @@ Plot_bf<-function(j,t,h,w,dt)
   }
   print(c("plotdrops",nrow(drop.info)))
   old.wd<-getwd()
-  setwd(paste0(old.wd,"/Dat/Run1/images"))
+  setwd(paste0(old.wd,"/Dat/Run6/images"))
   pdf(paste0(j,".pdf"))
   #pdf(paste0(j,"-",(t-((t/dt*1000)%%1L)*dt/1000),".pdf"))
   plot.new()
