@@ -11,7 +11,7 @@ Neg_dist<-function(t,ncoal,h,w,depart.list,search.pool)
   repk=0
   repeat{
     repk=repk+1
-    print(c("repk:",repk))
+    #print(c("repk:",repk))
     ndrop=length(bfobj)
     #only those coalesced droplets need to be checked in the next loop (search.pool.new)
     search.pool.new=NULL
@@ -64,11 +64,11 @@ Neg_dist<-function(t,ncoal,h,w,depart.list,search.pool)
       }
       ######################################################################
       delete.list=NULL
-      print(c("neg_dist:",neg_dist,is.matrix(neg_dist)))
+      #print(c("neg_dist:",neg_dist,is.matrix(neg_dist)))
       for (i in 1:nrow(neg_dist))
       {
         ncoal=ncoal+1L
-        print(c("i",i,neg_dist[i,1],neg_dist[i,2]))
+        #print(c("i",i,neg_dist[i,1],neg_dist[i,2]))
         if (bfobj[[as.character(neg_dist[i,1])]]$r<bfobj[[as.character(neg_dist[i,2])]]$r)
         {
           small=neg_dist[i,1]
@@ -85,9 +85,9 @@ Neg_dist<-function(t,ncoal,h,w,depart.list,search.pool)
         #Check if the radius after coalescence is larger than rcr
         #If does, the drop jump away
         #Otherwise, it stays
-        if (bfobj[[as.character(big)]]$r>rcr)
+        if (bfobj[[as.character(big)]]$r>rcr & bfobj[[as.character(big)]]$r<up_ratio*bfobj[[as.character(small)]]$r)
         {
-          bfobj[[as.character(big)]]&jump.t<<-t
+          bfobj[[as.character(big)]]$jump.t<<-t
           #Only include the droplet jump at the last time
           if (!((small %in% depart.list)|(big %in% depart.list)))
           {
