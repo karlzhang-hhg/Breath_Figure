@@ -2,6 +2,7 @@ source("Update_coal.R")
 source("Neg_dist.R")
 source("Min_dist.R")
 
+
 ######################################################################
 #Check if there is any coalescence should have happened
 #in time interval [t,t+dt]: if does, return a new dt, the
@@ -15,7 +16,7 @@ Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr,search.pool.min)
   depart.list=NULL #if, after coalesecence, radius is larger than rcr, the droplet departs from the substrate
   ######################################################################
   #for potential coalescence happening in time interval [t,t+dt]
-  print(c("min_dist:",min_dist,is.matrix(min_dist)))
+  #print(c("min_dist:",min_dist,is.matrix(min_dist)))
   if (min_dist[1,5]>2*alpha*dt) #there is no coalescence in time interval [t,t+dt]
   {
     print("large separation")
@@ -75,10 +76,10 @@ Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr,search.pool.min)
       #Check if the radius after coalescence is larger than rcr
       #If does, the drop jump away
       #Otherwise, it stays
-      if (bfobj[[as.character(big)]]$r>rcr)
+      if (bfobj[[as.character(big)]]$r>rcr & bfobj[[as.character(big)]]$r<up_ratio*bfobj[[as.character(small)]]$r)
       {
         depart.list=c(depart.list,big) #included those departed
-        bfobj[[as.character(big)]]&jump.t<<-t+dtp
+        bfobj[[as.character(big)]]$jump.t<<-t+dtp
         search.pool.new=c(search.pool.new,big)
         delete.list=c(delete.list,small) #included those absorbed
       }
@@ -122,7 +123,7 @@ Grow_Chk_coal_depa<-function(alpha,ncoal,t,dt,h,w,min_dist,rcr,search.pool.min)
 #     #search.pool.min is a search pool for finding minimum gap in droplet pattern
 #     search.pool.min=Min_dist_info[[2]]
     
-    print(c("search.pool.min:",search.pool.min))
+#     print(c("search.pool.min:",search.pool.min))
     num_coal=ncoal-ncoal.old
     return(list(num_coal,dtp,min_dist,depart.list,search.pool.min))
   }
