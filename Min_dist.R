@@ -57,6 +57,6 @@ Min_dist<-function(t,min_dist,search.pool.min)
     min_dist=as.matrix(as.vector(min_dist[-delete.pair,]),ncol=5)
   }
   #search.pool.min=as.vector(min_dist[,1:2])
-  print(c("search.pool.min.old:",search.pool.min.old))
+#   print(c("search.pool.min.old:",search.pool.min.old))
   return(list(min_dist,search.pool.min.old))
 }
