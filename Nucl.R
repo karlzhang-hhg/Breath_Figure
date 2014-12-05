@@ -21,7 +21,7 @@ Nucl<-function(t,lambda, h, w, dr, nuclr,search.pool.min)
   #this can also change to Poisson process
   nucl<-rMaternII(lambda,dr,win=owin(c(0,w),c(0,h)),stationary = T)
   #plot(nucl)
-  print(c("nuclnum",nucl$n))
+  #print(c("nuclnum",nucl$n))
   stopifnot(nucl$n!=0)
   if (length(bfobj)==0)
   {
