@@ -4,7 +4,7 @@ source("Evol.R")
 
 h=1
 w=1
-nstep=2000L
+nstep=4000L
 lambda=30
 alpha=0.15
 rcr=0.03
@@ -31,10 +31,12 @@ bfallobj=NULL
 coalall=NULL
 nucl.num=0
 
-Evol(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr)
+saveim=0
+
+Evol(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr,saveim)
 
 old.wd=getwd()
-setwd(paste0(old.wd,"/Dat/Run6"))
+setwd(paste0(old.wd,"/Dat/Run8"))
 save(phypar,file="phypar")
 save(bfallobj,file="bfallobj")
 save(bfobj,file="bfobj")

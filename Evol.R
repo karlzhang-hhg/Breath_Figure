@@ -6,7 +6,7 @@ source("Plot_bf.R")
 ######################################################################
 #Evolve in between two calculated time
 #nstep: total step of evolution
-Evol<-function(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr)
+Evol<-function(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr,saveim)
 {
   ######################################################################
   #Nucleation (routine)
@@ -60,7 +60,10 @@ Evol<-function(h,w,nstep,lambda,alpha,rcr,dr,dt,nuclr)
     ######################################################################
     #store the updtated information into bfallobj
     bfallobj[names(bfobj)]<<-bfobj
-    Plot_bf(i,t,h,w,dt)
+    if (saveim==1)
+    {
+      Plot_bf(i,t,h,w,dt)
+    }
     print(c("i&nucl.num&t:",i,nucl.num,t))
   }
 }
